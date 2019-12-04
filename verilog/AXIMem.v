@@ -3,7 +3,8 @@
 
 module AXIMem (
       input clock,		
-      input clock200, // 200m Hz to drive DDR ctrl
+      input clock100, // 100m Hz to drive DDR ctrl
+      input clock200, // 200m Hz to Ref
       input reset,    
     
       output        io_axi4_0_aw_ready, 
@@ -216,22 +217,23 @@ module AXIMem (
     mig_7series_0 DDR_ctrl(
       
       // device pins
-      .ddr2_dq        ( ddr_dq      ),
-      .ddr2_dqs_n     ( ddr_dqs_n   ),
-      .ddr2_dqs_p     ( ddr_dqs_p   ),
-      .ddr2_addr      ( ddr_addr    ),
-      .ddr2_ba        ( ddr_ba      ),
-      .ddr2_ras_n     ( ddr_ras_n   ),
-      .ddr2_cas_n     ( ddr_cas_n   ),
-      .ddr2_we_n      ( ddr_we_n    ),
-      .ddr2_ck_p      ( ddr_ck_p    ),
-      .ddr2_ck_n      ( ddr_ck_n    ),
-      .ddr2_cke       ( ddr_cke     ),
-      .ddr2_cs_n      ( ddr_cs_n    ),
-      .ddr2_dm        ( ddr_dm      ),
-      .ddr2_odt       ( ddr_odt     ),
+      .ddr3_dq        ( ddr_dq      ),
+      .ddr3_dqs_n     ( ddr_dqs_n   ),
+      .ddr3_dqs_p     ( ddr_dqs_p   ),
+      .ddr3_addr      ( ddr_addr    ),
+      .ddr3_ba        ( ddr_ba      ),
+      .ddr3_ras_n     ( ddr_ras_n   ),
+      .ddr3_cas_n     ( ddr_cas_n   ),
+      .ddr3_we_n      ( ddr_we_n    ),
+      .ddr3_ck_p      ( ddr_ck_p    ),
+      .ddr3_ck_n      ( ddr_ck_n    ),
+      .ddr3_cke       ( ddr_cke     ),
+      .ddr3_cs_n      ( ddr_cs_n    ),
+      .ddr3_dm        ( ddr_dm      ),
+      .ddr3_odt       ( ddr_odt     ),
 
-      .sys_clk_i      ( clock200	),
+      .sys_clk_i      ( clock100	),
+      .clk_ref_i      ( clock200  ),
       .sys_rst        ( reset    ),
 
       .device_temp_i  ( 0           ),  // we do not need XADC just ground it       

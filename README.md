@@ -90,8 +90,8 @@ The tutorial should work well for most version of Vivado.
 
 - Creat New Project 
 - Add Sources - Add Directories - choose **/verilog**
-- Add Constraints - Add Files - choose **/constraints/Board_Pin_Map.xdc**
-- Default Part - Parts - choose **xc7a100tcsg324-1** , this is the chip that nexys4ddr holds.
+- Add Constraints - Add Files - choose **/constraints/Minisys_Board_Pin_Map.xdc**
+- Default Part - Parts - choose **xc7a100tfgg484-1** , this is the chip that Minisys holds.
 - In the **Project Manager** window, right click **chip_inst - chip_top (chip_top.v)** and set it as Top module
 - Please check if **firmware.hex** has been added as source file. It should be listed under **unknown file** category, like the screen shot:
   - ![](pics/firmware.png)
@@ -106,7 +106,7 @@ Before I output the TCL script (one of my future work),  at current stage please
 
 - Component name - clk_wiz_0
 - Clocking Options - Primitive - **PLL**
-- Output Clocks - Output Clock - **clk_out1 30.000; clk_out2 200.000**
+- Output Clocks - Output Clock - **clk_out1 30.000; clk_out2 200.000; clk_out3 100.000;**
 - Output Clocks - Enable Optional IO - check **reset and locked**
 - Output Clocks - Reset Type - **Active Low**
 
@@ -152,22 +152,23 @@ Before I output the TCL script (one of my future work),  at current stage please
 - Component name - mig_7series_0
 - MIG output options - Creat Design
 - Check **AXI4 Interface**
-- Pin Compatible FPGA - Select **xc7a100ti-csg324**
-- Memory Selection - **DDR2 SDRAM**
-- Options for Controller: Clock Period - **5000ps**; PHY to Controller Clock Ration - **4:1**
-- Options for Controller: Memory Part - **MT47H64M16HR-25E**; Data Width - **16**;
+- Pin Compatible FPGA - Select Nothing
+- Memory Selection - **DDR3 SDRAM**
+- Options for Controller: Clock Period - **2500ps**; PHY to Controller Clock Ration - **4:1**
+- Options for Controller: Memory Part - **MT41J256m16xx-107**; Data Width - **16**;
 - Options for Controller: Num of Bank Machines - **4**; Ordering - **Normal**
 - AXI Parameter Options: Data Width - **64**; Arbitration Scheme - **RD_PRI_REG**; ID Width: **4**
-- Memory Options for Controller: Input Clock Period - **5000ps (200MHz)**
-- Memory Options for Controller: Burst type - **Sequential**; Output Drive Strength - **Full**
-- Memory Options for Controller: Controller Chip Select Pin - **Enable**; ODT - **50ohms**
-- Memory Options for Controller: Memory Address Mapping Selection - **BANK/ROW/COLUMN**
-- System Clock - No Buffer; Reference Clock - **Use System Clock**
+- Memory Options for Controller: Input Clock Period - **10000ps (100MHz)**
+- Memory Options for Controller: Burst type - **Sequential**; 
+- Memory Options for Controller: Output Driver Impedance Control - **RZQ/7**; RTT - **RZQ/4**
+- Memory Options for Controller: Controller Chip Select Pin - **Enable**; 
+- Memory Options for Controller: Memory Address Mapping Selection - **BANK/ROW/COLUMN**; 
+- System Clock - **No Buffer**; Reference Clock - **No Buffer**
 - System Reset Polarity - **Active HIGH**
 - Debug Signal - off; check Internal Verf; IO Power Reduction - off; XADC - off
 - Internal Termination Impedance - **50ohms**
 - Pin/Bank Selection Mode - **Fixed Pin Out**
-- Pin Selection For Controller - Read XDC/UCF - select **/constraints/DDR_Pin_Map.ucf** - Validate
+- Pin Selection For Controller - Read XDC/UCF - select **/constraints/Minisys_DDR_Pin_Map.ucf** - Validate
 - Accept
 
 ### 2.2 generating MCS
@@ -175,12 +176,12 @@ Before I output the TCL script (one of my future work),  at current stage please
 - Generate BitStream
 - This may take a long time: core i7-6700, 5min for synthesis, 7min for implementation
 - Tools - Generate Memory Configuartion File
-  - Format - **MCS**; Memory Part - **s25fl128sxxxxxx0-spi**; Interface - **SPIx1**
+  - Format - **MCS**; Memory Part - **n25q64-3.3v-spi-x1_x2_x4**; Interface - **SPIx1**
   - Do not forget to specify a filename and the output path
   - Check Load bitstream files - select  **your_project_dir/.runs/impl_1/.bit**
 - Then you can find a ***.mcs** file under the path you specify in the Filename Option.
 - connect your Nexys4ddr with USB cable and power it on
-- Hardware Manager - add configuration memory device - **s25fl128sxxxxxx0-spi**
+- Hardware Manager - add configuration memory device - **n25q64-3.3v-spi-x1_x2_x4**
 - Hardware Window - program configuration memory device
   - select your ***.mcs** file as configuration file
   - Apply

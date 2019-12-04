@@ -39,6 +39,7 @@ module chip_top
 
   wire  clock30; //30m
   wire  clock200; //200m
+  wire  clock100mem; //100m for mig sys_clk_i
   
   //dut wires
   wire  dut_clock; 
@@ -283,6 +284,7 @@ module chip_top
     .clk_in1(clock100),//100m
     .clk_out1(clock30),   //30m
     .clk_out2(clock200), //200m
+    .clk_out3(clock100mem), //100m for mig
     .resetn(buttonresetn),
     .locked(pll_locked) // we use pll locked signal as resetn for ddr ctrl.
   );
@@ -421,7 +423,8 @@ module chip_top
 `ifdef SIM_ENABLE_DDR
   AXIMem mem ( 
     .clock(mem_clock),
-    .clock200(clock200), // DDR driver 200MHz
+    .clock100(clock100mem), // sys_clk_i 100MHz
+    .clock200(clock200), // clk_ref_i 200MHz
     .reset(mem_reset),
 
     .io_axi4_0_aw_ready(mem_io_axi4_0_aw_ready),
