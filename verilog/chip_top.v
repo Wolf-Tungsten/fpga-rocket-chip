@@ -12,20 +12,21 @@ module chip_top
   input   uart_RX,
   
   //----DDR
-  inout  [15:0] ddr_dq,
-  inout   [1:0] ddr_dqs_n,
-  inout   [1:0] ddr_dqs_p,
-  output [12:0] ddr_addr,
-  output  [2:0] ddr_ba,
-  output        ddr_ras_n,
-  output        ddr_cas_n,
-  output        ddr_we_n,
-  output        ddr_ck_n,
-  output        ddr_ck_p,
-  output        ddr_cke,
-  output        ddr_cs_n,
-  output  [1:0] ddr_dm,
-  output        ddr_odt,
+  inout  [15:0] ddr3_dq,
+  inout   [1:0] ddr3_dqs_n,
+  inout   [1:0] ddr3_dqs_p,
+  output [14:0] ddr3_addr,
+  output  [2:0] ddr3_ba,
+  output        ddr3_ras_n,
+  output        ddr3_cas_n,
+  output        ddr3_we_n,
+  output        ddr3_ck_n,
+  output        ddr3_ck_p,
+  output        ddr3_cke,
+  output        ddr3_cs_n,
+  output  [1:0] ddr3_dm,
+  output        ddr3_odt,
+  output        ddr3_reset_n,
   
   //----SD on spi
   inout         spi_cs,
@@ -279,13 +280,13 @@ module chip_top
 //  //////////////////////////////////////////////////
   
   wire  pll_locked;
-  assign reset = ~ pll_locked;
+  assign reset = ~pll_locked;
   clk_wiz_0 clk_gen(
     .clk_in1(clock100),//100m
     .clk_out1(clock30),   //30m
     .clk_out2(clock200), //200m
     .clk_out3(clock100mem), //100m for mig
-    .resetn(buttonresetn),
+    .resetn(~buttonresetn),
     .locked(pll_locked) // we use pll locked signal as resetn for ddr ctrl.
   );
     
@@ -470,20 +471,21 @@ module chip_top
     .io_axi4_0_r_last(mem_io_axi4_0_r_last),
     
     //HW devices' pins
-    .ddr_dq (ddr_dq),
-    .ddr_dqs_n (ddr_dqs_n),
-    .ddr_dqs_p (ddr_dqs_p),
-    .ddr_addr (ddr_addr),
-    .ddr_ba (ddr_ba),
-    .ddr_ras_n (ddr_ras_n),
-    .ddr_cas_n (ddr_cas_n),
-    .ddr_we_n (ddr_we_n),
-    .ddr_ck_n (ddr_ck_n),
-    .ddr_ck_p (ddr_ck_p),
-    .ddr_cke (ddr_cke),
-    .ddr_cs_n (ddr_cs_n),
-    .ddr_dm (ddr_dm),
-    .ddr_odt (ddr_odt)
+    .ddr_dq (ddr3_dq),
+    .ddr_dqs_n (ddr3_dqs_n),
+    .ddr_dqs_p (ddr3_dqs_p),
+    .ddr_addr (ddr3_addr),
+    .ddr_ba (ddr3_ba),
+    .ddr_ras_n (ddr3_ras_n),
+    .ddr_cas_n (ddr3_cas_n),
+    .ddr_we_n (ddr3_we_n),
+    .ddr_ck_n (ddr3_ck_n),
+    .ddr_ck_p (ddr3_ck_p),
+    .ddr_cke (ddr3_cke),
+    .ddr_cs_n (ddr3_cs_n),
+    .ddr_dm (ddr3_dm),
+    .ddr_odt (ddr3_odt),
+    .ddr_reset_n(ddr3_reset_n)
 //    // for debug
 //    .init_fin(ddr_init_fin),
 //    .s_aw_ready(awr),

@@ -53,7 +53,7 @@ module AXIMem (
       inout  [15:0] ddr_dq,
       inout   [1:0] ddr_dqs_n,
       inout   [1:0] ddr_dqs_p,
-      output [12:0] ddr_addr,
+      output [14:0] ddr_addr,
       output  [2:0] ddr_ba,
       output        ddr_ras_n,
       output        ddr_cas_n,
@@ -63,7 +63,8 @@ module AXIMem (
       output        ddr_cke,
       output        ddr_cs_n,
       output  [1:0] ddr_dm,
-      output        ddr_odt
+      output        ddr_odt,
+      output        ddr_reset_n
       
 //      //for debug
 //      output s_ar_ready,
@@ -231,12 +232,13 @@ module AXIMem (
       .ddr3_cs_n      ( ddr_cs_n    ),
       .ddr3_dm        ( ddr_dm      ),
       .ddr3_odt       ( ddr_odt     ),
+      .ddr3_reset_n   ( ddr_reset_n ),
 
-      .sys_clk_i      ( clock100	),
-      .clk_ref_i      ( clock200  ),
+      .sys_clk_i      ( clock200  ), // 100m
+      //.clk_ref_i      ( clock200  ),
       .sys_rst        ( reset    ),
 
-      .device_temp_i  ( 0           ),  // we do not need XADC just ground it       
+      //.device_temp_i  ( 0           ),  // we do not need XADC just ground it       
       .app_sr_req     ( 1'b0        ),  // ddr control bits, all should be zero
       .app_ref_req    ( 1'b0        ), // 
       .app_zq_req     ( 1'b0        ),

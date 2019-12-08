@@ -15,8 +15,8 @@ FATFS FatFs;   // Work area (file system object) for logical drive
 // max size of file image is 16M
 #define MAX_FILE_SIZE 0x1000000
 
-// size of DDR RAM (128M for NEXYS4-DDR) 
-#define DDR_SIZE 0x8000000
+// size of DDR RAM (256M for Minisys) 
+#define DDR_SIZE 0x10000000
 
 // 4K size read burst
 #define SD_READ_SIZE 4096
@@ -29,6 +29,12 @@ int main (void)
   uint8_t *memory_base = (uint8_t *)(get_ddr_base());
 
   uart_init();
+  printf("=============== Minisys Rocket Chip ===============\n\r", 0);
+  printf("=============== DDR TEST ===============\n\r", 0);
+  printf("DDR BASE VALUE:%d \r\n", *boot_file_buf);
+  *boot_file_buf = 47;
+  printf("DDR BASE VALUE AFTER WRITE:%d \r\n", *boot_file_buf);
+  printf("=============== DDR TEST PASSED ===============\n\r", 0);
 
   printf("=============== FSBL ===============\n\r", 0);
 
@@ -51,6 +57,9 @@ int main (void)
   uint32_t fsize = 0;           // file size count
   uint32_t br;                  // Read count
   do {
+    if( fsize % 1024 == 0 ) {
+      printf("Loading %d KB to memory address \r", fsize / 1024);
+    }
     fr = f_read(&fil, buf, SD_READ_SIZE, &br);  // Read a chunk of source file
     buf += br;
     fsize += br;

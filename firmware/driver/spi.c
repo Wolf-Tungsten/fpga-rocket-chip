@@ -1,6 +1,7 @@
 // See LICENSE for license details.
 
 #include "spi.h"
+#include "myprintf.h"
 
 #define GetBit(r, p) (((r) & (1 <<p)) >> p)
 
@@ -10,6 +11,17 @@ void spi_init() {
   uint32_t resp;
 
   // power off SD
+  printf("\n\r****Pull Out SD Card Now!****\n\r", 0);
+  for (uint32_t delay_i = 0; delay_i < 15; delay_i++) {
+    printf("=", 0);
+    for (uint32_t delay_j = 0; delay_j < 300; delay_j++) {
+      //printf(". ", 0);
+      for (uint32_t delay_k = 0; delay_k < 1000; delay_k++) {
+        ;
+      }
+    }
+  }
+  printf("\n\rStart Init SPI Controller\n\r", 0);
   *(spi_base_ptr) = 0x1;
 
   // software reset?
@@ -30,6 +42,17 @@ void spi_init() {
   // enable spi
   *(spi_base_ptr + SPI_CR) = 0x86;
 
+  printf("\n\r****Insert SD Card Now!****\n\r", 0);
+  for (uint32_t delay_i = 0; delay_i < 15; delay_i++) {
+    printf("=", 0);
+    for (uint32_t delay_j = 0; delay_j < 300; delay_j++) {
+      //printf(". ", 0);
+      for (uint32_t delay_k = 0; delay_k < 1000; delay_k++) {
+        ;
+      }
+    }
+  }
+  printf("\n\rSD Card Initialized!\n\r", 0);
   // power on SD
    *(spi_base_ptr) = 0x0;
 
@@ -37,6 +60,18 @@ void spi_init() {
 
 
 void spi_disable() {
+    // power off SD
+  printf("\n\r****Pull Out SD Card Now!****\n\r", 0);
+  for (uint32_t delay_i = 0; delay_i < 15; delay_i++) {
+    printf("=", 0);
+    for (uint32_t delay_j = 0; delay_j < 300; delay_j++) {
+      //printf(". ", 0);
+      for (uint32_t delay_k = 0; delay_k < 1000; delay_k++) {
+        ;
+      }
+    }
+  }
+  printf("\n\r", 0);
   // power off SD
   *(spi_base_ptr) = 0x1;
 
