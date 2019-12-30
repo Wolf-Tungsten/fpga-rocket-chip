@@ -42,7 +42,6 @@ read_verilog -library xil_defaultlib {
   /home/wolf/minisys-rocket-chip/verilog/AXIMem.v
   /home/wolf/minisys-rocket-chip/verilog/AXIMmio.v
   /home/wolf/minisys-rocket-chip/verilog/utils/AsyncResetReg.v
-  /home/wolf/minisys-rocket-chip/verilog/peri/DTModule.v
   /home/wolf/minisys-rocket-chip/verilog/DefaultConfig.v
   /home/wolf/minisys-rocket-chip/verilog/utils/EICG_wrapper.v
   /home/wolf/minisys-rocket-chip/verilog/peri/bram.v

@@ -7,6 +7,12 @@ module chip_top
   
   output [15:0]LED,
   
+  //----JTAG
+  input jtag_tck,
+  input jtag_tms,
+  input jtag_tdi,
+  output jtag_tdo,
+  input jtag_reset,
   //----UART
   output  uart_TX,
   input   uart_RX,
@@ -47,17 +53,13 @@ module chip_top
   wire  dut_reset; 
   wire [1:0] dut_interrupts; 
   //debug module interface
-  wire  dut_debug_clockeddmi_dmi_req_ready; 
-  wire  dut_debug_clockeddmi_dmi_req_valid; 
-  wire [6:0] dut_debug_clockeddmi_dmi_req_addr; 
-  wire [31:0] dut_debug_clockeddmi_dmi_req_data; 
-  wire [1:0] dut_debug_clockeddmi_dmi_req_op; 
-  wire  dut_debug_clockeddmi_dmi_resp_ready; 
-  wire  dut_debug_clockeddmi_dmi_resp_valid; 
-  wire [31:0] dut_debug_clockeddmi_dmi_resp_data; 
-  wire [1:0] dut_debug_clockeddmi_dmi_resp_resp; 
-  wire  dut_debug_clockeddmi_dmiClock; 
-  wire  dut_debug_clockeddmi_dmiReset; 
+  wire dut_debug_systemjtag_jtag_TCK;
+  wire dut_debug_systemjtag_jtag_TMS;
+  wire dut_debug_systemjtag_jtag_TDI;
+  wire dut_debug_systemjtag_jtag_TDO_data;
+  wire dut_debug_systemjtag_jtag_TDO_driven;
+  wire dut_debug_systemjtag_reset;
+  wire [10:0] dut_debug_systemjtag_mfr_id;
   wire  dut_debug_ndreset; 
   wire  dut_debug_dmactive; 
   //mem
@@ -254,30 +256,9 @@ module chip_top
   wire [63:0] mmio_io_axi4_0_r_data; 
   wire [1:0] mmio_io_axi4_0_r_resp; 
   wire  mmio_io_axi4_0_r_last; 
-
-  // debug transport module (debug2jtag)
-  wire  SimDTM_debug_req_ready; 
-  wire  SimDTM_debug_req_valid; 
-  wire [6:0] SimDTM_debug_req_addr; 
-  wire [31:0] SimDTM_debug_req_data; 
-  wire [1:0] SimDTM_debug_req_op; 
-  wire  SimDTM_debug_resp_ready; 
-  wire  SimDTM_debug_resp_valid; 
-  wire [31:0] SimDTM_debug_resp_data; 
-  wire [1:0] SimDTM_debug_resp_resp; 
-  wire  SimDTM_reset; 
-  wire  SimDTM_clock; 
   
   wire interrupt_spi;
   wire interrupt_uart;
-//  /////////////////////////////////////////////////for debug
-//  wire ddr_init_fine;
-//  wire awr;
-//  wire arr;
-//  wire wr;
-//  wire bvalid;
-//  wire rvalid;
-//  //////////////////////////////////////////////////
   
   wire  pll_locked;
   assign reset = ~pll_locked;
@@ -294,17 +275,13 @@ module chip_top
   ExampleRocketSystem dut ( 
       .clock(dut_clock),
       .reset(dut_reset),
-      .debug_clockeddmi_dmi_req_ready(dut_debug_clockeddmi_dmi_req_ready),
-      .debug_clockeddmi_dmi_req_valid(dut_debug_clockeddmi_dmi_req_valid),
-      .debug_clockeddmi_dmi_req_bits_addr(dut_debug_clockeddmi_dmi_req_addr),
-      .debug_clockeddmi_dmi_req_bits_data(dut_debug_clockeddmi_dmi_req_data),
-      .debug_clockeddmi_dmi_req_bits_op(dut_debug_clockeddmi_dmi_req_op),
-      .debug_clockeddmi_dmi_resp_ready(dut_debug_clockeddmi_dmi_resp_ready),
-      .debug_clockeddmi_dmi_resp_valid(dut_debug_clockeddmi_dmi_resp_valid),
-      .debug_clockeddmi_dmi_resp_bits_data(dut_debug_clockeddmi_dmi_resp_data),
-      .debug_clockeddmi_dmi_resp_bits_resp(dut_debug_clockeddmi_dmi_resp_resp),
-      .debug_clockeddmi_dmiClock(dut_debug_clockeddmi_dmiClock),
-      .debug_clockeddmi_dmiReset(dut_debug_clockeddmi_dmiReset),
+      .debug_systemjtag_jtag_TCK(dut_debug_systemjtag_jtag_TCK), 
+      .debug_systemjtag_jtag_TMS(dut_debug_systemjtag_jtag_TMS), 
+      .debug_systemjtag_jtag_TDI(dut_debug_systemjtag_jtag_TDI),
+      .debug_systemjtag_jtag_TDO_data(dut_debug_systemjtag_jtag_TDO_data), 
+      .debug_systemjtag_jtag_TDO_driven(dut_debug_systemjtag_jtag_TDO_driven),
+      .debug_systemjtag_reset(dut_debug_systemjtag_reset),
+      .debug_systemjtag_mfr_id(dut_debug_systemjtag_mfr_id),
       .debug_ndreset(dut_debug_ndreset),
       .debug_dmactive(dut_debug_dmactive),
       .interrupts(dut_interrupts),
@@ -571,24 +548,17 @@ module chip_top
   assign LED[2] = spi_sclock;
   assign LED[1] = spi_cs;
   assign LED[0] = sd_poweroff;    
-  //////////////////////////////////debug
-  
-  
-  DTModule DTM ( 
-    .debug_req_ready(SimDTM_debug_req_ready),
-    .debug_req_valid(SimDTM_debug_req_valid),
-    .debug_req_addr(SimDTM_debug_req_addr),
-    .debug_req_data(SimDTM_debug_req_data),
-    .debug_req_op(SimDTM_debug_req_op),
-    .debug_resp_ready(SimDTM_debug_resp_ready),
-    .debug_resp_valid(SimDTM_debug_resp_valid),
-    .debug_resp_data(SimDTM_debug_resp_data),
-    .debug_resp_resp(SimDTM_debug_resp_resp),
-    .reset(SimDTM_reset),
-    .clk(SimDTM_clock)
-  );
-  
+  //////////////////////////////////jtag
 
+  assign dut_debug_systemjtag_mfr_id = 11'h0;
+  assign dut_debug_systemjtag_jtag_TCK = jtag_tck;
+  assign dut_debug_systemjtag_jtag_TMS = jtag_tms;
+  assign dut_debug_systemjtag_jtag_TDI = jtag_tdi;
+  assign dut_debug_systemjtag_reset = jtag_reset;
+  // maybe need to change 
+  assign jtag_tdo = dut_debug_systemjtag_jtag_TDO_data;
+  
+  
   //-------------------------connect all the module together---- very verbose by Chisel generated, I will change it later
 
   assign dut_clock = clock30; 
@@ -600,27 +570,12 @@ module chip_top
   assign dut_debug_clockeddmi_dmiClock = clock30; 
   assign dut_debug_clockeddmi_dmiReset = reset; 
 
-  //  ***** debug module *****
-  // CR inheritance
-  assign SimDTM_reset = reset; 
-  assign SimDTM_clock = clock30; 
-  //  drived by outside module
-  assign dut_debug_clockeddmi_dmi_req_valid = SimDTM_debug_req_valid;
-  assign dut_debug_clockeddmi_dmi_req_addr = SimDTM_debug_req_addr;
-  assign dut_debug_clockeddmi_dmi_req_data = SimDTM_debug_req_data;
-  assign dut_debug_clockeddmi_dmi_req_op = SimDTM_debug_req_op;
-  assign dut_debug_clockeddmi_dmi_resp_ready = SimDTM_debug_resp_ready;
-  //  output to outside module 
-  assign SimDTM_debug_req_ready = dut_debug_clockeddmi_dmi_req_ready;
-  assign SimDTM_debug_resp_valid = dut_debug_clockeddmi_dmi_resp_valid;
-  assign SimDTM_debug_resp_data = dut_debug_clockeddmi_dmi_resp_data;
-  assign SimDTM_debug_resp_resp = dut_debug_clockeddmi_dmi_resp_resp;
-
-
   //  ***** mem module *****
   // CR inheritance
-  assign mem_clock = clock30; 
-  assign mem_reset = reset; 
+  assign mem_clock = clock30;
+  // grh: change mem_reset to dut_reset 
+  assign mem_reset = dut_reset;
+  //  assign mem_reset = reset; 
   //  drived by outside module
   assign dut_mem_axi4_0_aw_ready = mem_io_axi4_0_aw_ready; 
   assign dut_mem_axi4_0_w_ready = mem_io_axi4_0_w_ready; 

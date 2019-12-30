@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<GenRun Id="synth_1" LaunchPart="xc7a100tfgg484-1" LaunchTime="1575782011">
+<GenRun Id="synth_1" LaunchPart="xc7a100tfgg484-1" LaunchTime="1577702259">
   <File Type="VDS-TIMINGSUMMARY" Name="chip_top_timing_summary_synth.rpt"/>
   <File Type="RDS-DCP" Name="chip_top.dcp"/>
   <File Type="RDS-UTIL-PB" Name="chip_top_utilization_synth.pb"/>
@@ -26,13 +26,6 @@
       </FileInfo>
     </File>
     <File Path="$PPRDIR/../verilog/utils/AsyncResetReg.v">
-      <FileInfo>
-        <Attr Name="UsedIn" Val="synthesis"/>
-        <Attr Name="UsedIn" Val="implementation"/>
-        <Attr Name="UsedIn" Val="simulation"/>
-      </FileInfo>
-    </File>
-    <File Path="$PPRDIR/../verilog/peri/DTModule.v">
       <FileInfo>
         <Attr Name="UsedIn" Val="synthesis"/>
         <Attr Name="UsedIn" Val="implementation"/>
@@ -136,6 +129,14 @@
         <Attr Name="UsedIn" Val="simulation"/>
       </FileInfo>
     </File>
+    <File Path="$PPRDIR/../verilog/peri/DTModule.v">
+      <FileInfo>
+        <Attr Name="AutoDisabled" Val="1"/>
+        <Attr Name="UsedIn" Val="synthesis"/>
+        <Attr Name="UsedIn" Val="implementation"/>
+        <Attr Name="UsedIn" Val="simulation"/>
+      </FileInfo>
+    </File>
     <File Path="$PPRDIR/../verilog/testbench/dut_top_tb.v">
       <FileInfo>
         <Attr Name="AutoDisabled" Val="1"/>
@@ -176,6 +177,7 @@
       </FileInfo>
     </File>
     <Config>
+      <Option Name="TargetConstrsFile" Val="$PPRDIR/../constraints/Minisys_Board_Pin_Map.xdc"/>
       <Option Name="ConstrsType" Val="XDC"/>
     </Config>
   </FileSet>
