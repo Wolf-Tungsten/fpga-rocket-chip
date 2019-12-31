@@ -12,7 +12,7 @@ module chip_top
   input jtag_tms,
   input jtag_tdi,
   output jtag_tdo,
-  input jtag_reset,
+  //input jtag_reset,
   //----UART
   output  uart_TX,
   input   uart_RX,
@@ -550,13 +550,13 @@ module chip_top
   assign LED[0] = sd_poweroff;    
   //////////////////////////////////jtag
 
-  assign dut_debug_systemjtag_mfr_id = 11'h0;
+  assign dut_debug_systemjtag_mfr_id = 11'h7f;
   assign dut_debug_systemjtag_jtag_TCK = jtag_tck;
   assign dut_debug_systemjtag_jtag_TMS = jtag_tms;
   assign dut_debug_systemjtag_jtag_TDI = jtag_tdi;
-  assign dut_debug_systemjtag_reset = jtag_reset;
+  //assign dut_debug_systemjtag_reset = jtag_reset;
   // maybe need to change 
-  assign jtag_tdo = dut_debug_systemjtag_jtag_TDO_data;
+  assign jtag_tdo = dut_debug_systemjtag_jtag_TDO_driven;
   
   
   //-------------------------connect all the module together---- very verbose by Chisel generated, I will change it later

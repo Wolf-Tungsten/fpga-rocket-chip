@@ -50,12 +50,12 @@ set_property -dict { PACKAGE_PIN L18    IOSTANDARD LVCMOS33 } [get_ports { spi_m
 set_property src_info {type:XDC file:1 line:32 export:INPUT save:INPUT read:READ} [current_design]
 set_property -dict { PACKAGE_PIN L20    IOSTANDARD LVCMOS33 } [get_ports { spi_cs }];
 set_property src_info {type:XDC file:1 line:34 export:INPUT save:INPUT read:READ} [current_design]
-set_property -dict { PACKAGE_PIN N5    IOSTANDARD LVCMOS33 } [get_ports { jtag_tck }];
+set_property -dict { PACKAGE_PIN N5    IOSTANDARD LVCMOS15 } [get_ports { jtag_tck }];
 set_property src_info {type:XDC file:1 line:35 export:INPUT save:INPUT read:READ} [current_design]
-set_property -dict { PACKAGE_PIN P6    IOSTANDARD LVCMOS33 } [get_ports { jtag_tms }];
+set_property CLOCK_DEDICATED_ROUTE FALSE  [get_nets jtag_tck_IBUF];
 set_property src_info {type:XDC file:1 line:36 export:INPUT save:INPUT read:READ} [current_design]
-set_property -dict { PACKAGE_PIN M6    IOSTANDARD LVCMOS33 } [get_ports { jtag_tdi }];
+set_property -dict { PACKAGE_PIN P6    IOSTANDARD LVCMOS15 } [get_ports { jtag_tms }];
 set_property src_info {type:XDC file:1 line:37 export:INPUT save:INPUT read:READ} [current_design]
-set_property -dict { PACKAGE_PIN M5    IOSTANDARD LVCMOS33 } [get_ports { jtag_tdo }];
+set_property -dict { PACKAGE_PIN M6    IOSTANDARD LVCMOS15 } [get_ports { jtag_tdi }];
 set_property src_info {type:XDC file:1 line:38 export:INPUT save:INPUT read:READ} [current_design]
-set_property -dict { PACKAGE_PIN N2    IOSTANDARD LVCMOS33 } [get_ports { jtag_reset }];
+set_property -dict { PACKAGE_PIN M5    IOSTANDARD LVCMOS15 } [get_ports { jtag_tdo }];

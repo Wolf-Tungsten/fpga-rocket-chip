@@ -1,7 +1,7 @@
 Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 ---------------------------------------------------------------------------------------------------------------
 | Tool Version : Vivado v.2019.1.3 (lin64) Build 2644227 Wed Sep  4 09:44:18 MDT 2019
-| Date         : Mon Dec 30 18:49:26 2019
+| Date         : Tue Dec 31 15:13:56 2019
 | Host         : wolf-virtual-machine running 64-bit Ubuntu 18.04.3 LTS
 | Command      : report_drc -file chip_top_drc_opted.rpt -pb chip_top_drc_opted.pb -rpx chip_top_drc_opted.rpx
 | Design       : chip_top
@@ -24,41 +24,22 @@ Table of Contents
       Design limits: <entire design considered>
            Ruledeck: default
              Max violations: <unlimited>
-             Violations found: 75
+             Violations found: 74
 +-----------+----------+-----------------------------------------------------+------------+
 | Rule      | Severity | Description                                         | Violations |
 +-----------+----------+-----------------------------------------------------+------------+
-| BIVC-1    | Error    | Bank IO standard Vcc                                | 1          |
-| PLCK-12   | Error    | Clock Placer Checks                                 | 1          |
 | BUFC-1    | Warning  | Input Buffer Connections                            | 2          |
 | CFGBVS-1  | Warning  | Missing CFGBVS and CONFIG_VOLTAGE Design Properties | 1          |
 | DPIP-1    | Warning  | Input pipelining                                    | 18         |
 | DPOP-1    | Warning  | PREG Output pipelining                              | 19         |
 | DPOP-2    | Warning  | MREG Output pipelining                              | 19         |
+| PLCK-12   | Warning  | Clock Placer Checks                                 | 1          |
 | REQP-1571 | Warning  | connects_D                                          | 13         |
 | REQP-1709 | Warning  | Clock output buffering                              | 1          |
 +-----------+----------+-----------------------------------------------------+------------+
 
 2. REPORT DETAILS
 -----------------
-BIVC-1#1 Error
-Bank IO standard Vcc  - IOBank:35
-Conflicting Vcc voltages in bank 35. For example, the following two ports in this bank have conflicting VCCOs:  
-ddr3_ck_p (DIFF_SSTL15, requiring VCCO=1.500) and jtag_tck (LVCMOS33, requiring VCCO=3.300)
-Related violations: <none>
-
-PLCK-12#1 Error
-Clock Placer Checks  
-Poor placement for routing between an IO pin and BUFG. 
-Resolution: Poor placement of an IO pin and a BUFG has resulted in the router using a non-dedicated path between the two.  There are several things that could trigger this DRC, each of which can cause unpredictable clock insertion delays that result in poor timing.  This DRC could be caused by any of the following: (a) a clock port was placed on a pin that is not a CCIO-pin (b)the BUFG has not been placed in the same half of the device or SLR as the CCIO-pin (c) a single ended clock has been placed on the N-Side of a differential pair CCIO-pin.
- If this sub optimal condition is acceptable for this design, you may use the CLOCK_DEDICATED_ROUTE constraint in the .xdc file to demote this message to a WARNING. However, the use of this override is highly discouraged. These examples can be used directly in the .xdc file to override this clock rule.
-	< set_property CLOCK_DEDICATED_ROUTE FALSE [get_nets jtag_tck_IBUF] >
-
-	jtag_tck_IBUF_inst (IBUF.O) is locked to N5
-	jtag_tck_IBUF_BUFG_inst (BUFG.I) cannot be placed
-
-Related violations: <none>
-
 BUFC-1#1 Warning
 Input Buffer Connections  
 Input buffer mem/DDR_ctrl/u_mig_7series_0_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/gen_dqs_iobuf_HR.gen_dqs_iobuf[0].gen_dqs_diff.u_iobuf_dqs/IBUFDS_0 (in mem/DDR_ctrl/u_mig_7series_0_mig/u_memc_ui_top_axi/mem_intfc0/ddr_phy_top0/u_ddr_mc_phy_wrapper/gen_dqs_iobuf_HR.gen_dqs_iobuf[0].gen_dqs_diff.u_iobuf_dqs macro) has no loads. It is recommended to have an input buffer drive an internal load.
@@ -360,6 +341,17 @@ Related violations: <none>
 DPOP-2#19 Warning
 MREG Output pipelining  
 DSP mmio/uart_inst/bridge_inst/writer/lite_packet_size_return__0 multiplier stage mmio/uart_inst/bridge_inst/writer/lite_packet_size_return__0/P[47:0] is not pipelined (MREG=0). Pipelining the multiplier function will improve performance and will save significant power so it is suggested whenever possible to fully pipeline this function.  If this multiplier was inferred, it is suggested to describe an additional register stage after this function.  If there is no registered adder/accumulator following the multiply function, two pipeline stages are suggested to allow both the MREG and PREG registers to be used.  If the DSP48 was instantiated in the design, it is suggested to set both the MREG and PREG attributes to 1 when performing multiply functions.
+Related violations: <none>
+
+PLCK-12#1 Warning
+Clock Placer Checks  
+Poor placement for routing between an IO pin and BUFG. 
+Resolution: Poor placement of an IO pin and a BUFG has resulted in the router using a non-dedicated path between the two.  There are several things that could trigger this DRC, each of which can cause unpredictable clock insertion delays that result in poor timing.  This DRC could be caused by any of the following: (a) a clock port was placed on a pin that is not a CCIO-pin (b)the BUFG has not been placed in the same half of the device or SLR as the CCIO-pin (c) a single ended clock has been placed on the N-Side of a differential pair CCIO-pin.
+ This is normally an ERROR but the CLOCK_DEDICATED_ROUTE constraint is set to FALSE allowing your design to continue. The use of this override is highly discouraged as it may lead to very poor timing results. It is recommended that this error condition be corrected in the design.
+
+	jtag_tck_IBUF_inst (IBUF.O) is locked to N5
+	jtag_tck_IBUF_BUFG_inst (BUFG.I) cannot be placed
+
 Related violations: <none>
 
 REQP-1571#1 Warning
